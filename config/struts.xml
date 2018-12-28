@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+	
+   <struts>
+       
+     <constant name="struts.objectFactory" value="spring"></constant>
+        
+     <package name="crm" extends="struts-default" namespace="/">
+        
+         <interceptors>
+         <!-- 注册拦截器 -->
+         <interceptor name="CheckIntercept" class="com.yuantu.web.intercept.CheckIntercept"></interceptor>
+         <!-- 注册拦截器栈 -->
+         <interceptor-stack name="myStack">
+            <interceptor-ref name="CheckIntercept">
+              <param name="excludeMethods">login,getCode,regist,saveForgeter,list,isExitName</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+         </interceptor-stack>
+         
+         </interceptors>
+       
+         <!-- 指定默认拦截器栈 -->
+         <default-interceptor-ref name="myStack"></default-interceptor-ref>
+         
+          <!-- 全局结果集 -->
+        <global-results>
+           <result name="toLogin" type="redirect">/sign-in.jsp</result>
+        </global-results>
+       
+         <!-- 全局异常集 -->
+         <global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.RuntimeException"></exception-mapping>
+		</global-exception-mappings>
+       
+       
+       
+        <action name="UserAction_*" class="userAction" method="{1}">
+           <result name="toHome"  type="redirect">/index.jsp</result>
+           <result name="error">/sign-in.jsp</result>
+           <result name="Login">/success2.html</result>
+           <result name="regist">/sign-up.jsp</result>
+        </action>
+         
+          <action name="ApplyAction_*" class="applyAction" method="{1}">
+            <result name="addClass">/addClass.jsp</result>
+            <result name="success">/success1.html</result>
+            <result name="message">/message.jsp</result>
+            <result name="toIndex">/success4.html</result>
+          </action>
+          
+          <action name="ForgotAction" class="forgotAction" method="saveForgeter">
+              <result name="success">/success3.jsp</result>
+          </action>
+          <action name="BaseDictAction" class="baseDictAction" method="list"/>
+          
+          <action name="ValidateAction" class="com.yuantu.web.action.ValidateAction" method="getCode"/>
+      </package>
+   </struts>
